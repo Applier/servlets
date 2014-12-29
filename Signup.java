@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * @author Jade BOUMAZA
+ * @author Jade
  *
  */
 public class Signup extends HttpServlet{
@@ -24,15 +24,13 @@ public class Signup extends HttpServlet{
 	public static final String CHAMP_PASSWORD = "password";
 	public static final String CHAMP_CONFIRMATION = "confirmation";
 	public static final String ATTRIBUT_ERREURS = "erreurs";
-	public static final String ATTRIBUT_RESULTAT = "resultat";
-	
+
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/* Affichage de la page d'inscription */
 		this.getServletContext().getRequestDispatcher(VUE).forward(request,response);
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String resultat;
 		Map<String,String> erreurs = new HashMap<String,String>();
 		
 		/* Récupération des champs du formulaire d'inscription */
@@ -54,16 +52,8 @@ public class Signup extends HttpServlet{
 			erreurs.put(CHAMP_PASSWORD, e.getMessage());
 		}
 		
-		if (erreurs.isEmpty()) {
-			resultat = "Succès";
-		} 
-		else {
-			resultat = "Echec";
-		}
-		
 		/* Stockage du résultat et des messages d'erreur dans request */
 		request.setAttribute(ATTRIBUT_ERREURS, erreurs);
-		request.setAttribute(ATTRIBUT_RESULTAT, resultat);
 		
 		/* Transmission à la JSP signup.jsp */
 		this.getServletContext().getRequestDispatcher(VUE).forward(request,response);
@@ -93,13 +83,12 @@ public class Signup extends HttpServlet{
 			if (!password.equals(confirmation)) {
 				throw new Exception("Attention : les mots de passe entrés sont différents.");
 			}
-			else {
-				throw new Exception("Votre mot de passe doit contenir au moins 5 caractères.");
-		
-				
-			}
 		}
+		else {
+			throw new Exception("Votre mot de passe doit contenir au moins 5 caractères.");	
+		}
+		
 	}
-	
+		
 
 }
