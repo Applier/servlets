@@ -12,18 +12,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import intergiciels.beans.User;
+import intergiciels.forms.SignupForm;
 
 /**
- * @author Jade
+ * @author Jade BOUMAZA
  *
  */
 public class Signup extends HttpServlet{
 	public static final String VUE = "/WEB-INF/signup.jsp";
-	public static final String CHAMP_MAIL = "mail";
-	public static final String CHAMP_PASSWORD = "password";
-	public static final String CHAMP_CONFIRMATION = "confirmation";
-	public static final String ATTRIBUT_ERREURS = "erreurs";
+	public static final String ATTRIBUT_USER = "user";
+    public static final String ATTRIBUT_FORM = "form";
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/* Affichage de la page d'inscription */
@@ -31,64 +30,17 @@ public class Signup extends HttpServlet{
 	}
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Map<String,String> erreurs = new HashMap<String,String>();
+	 /* Préparation de l'objet formulaire */
+        SignupForm form = new SignupForm();
 		
-		/* Récupération des champs du formulaire d'inscription */
-		String mail = request.getParameter(CHAMP_MAIL);
-		String password = request.getParameter(CHAMP_PASSWORD);
-		String confirmation = request.getParameter(CHAMP_CONFIRMATION);
+        /* Appel au traitement et à la validation de la requête, et récupération du bean en résultant */
+        User user = form.inscrireUser(request);
 		
-		/* Validation du champ mail */
-		try {
-			validationMail(mail);
-		} catch (Exception e) {
-			erreurs.put(CHAMP_MAIL, e.getMessage());
-		}
-		
-		/* Validation du champ mot de passe */
-		try {
-			validationPassword(password,confirmation);
-		} catch (Exception e) {
-			erreurs.put(CHAMP_PASSWORD, e.getMessage());
-		}
-		
-		/* Stockage du résultat et des messages d'erreur dans request */
-		request.setAttribute(ATTRIBUT_ERREURS, erreurs);
-		
-		/* Transmission à la JSP signup.jsp */
-		this.getServletContext().getRequestDispatcher(VUE).forward(request,response);
-	}
-	
-	
-	/**
-	 * Vérifier que l'adresse mail entrée dans le champ email est non vide
-	 * et disponible (n'est pas déjà utilisée par un autre utilisateur)
-	 * @param mail
-	 * @throws Exception
-	 */
-	private void validationMail(String mail) throws Exception {
-		if (mail == null | mail.length() == 0) {
-			throw new Exception("Merci de saisir une adresse mail.");
-		}
-	}
-	
-	/**
-	 * Vérifier que le mot de passe entré dans le champ password est non vide,
-	 * fait plus de 5 caractères et identique à la chaîne de confirmation
-	 * @param password
-	 * @param confirmation
-	 */
-	private void validationPassword(String password, String confirmation) throws Exception {
-		if (password != null && password.length() >= 5) {
-			if (!password.equals(confirmation)) {
-				throw new Exception("Attention : les mots de passe entrés sont différents.");
-			}
-		}
-		else {
-			throw new Exception("Votre mot de passe doit contenir au moins 5 caractères.");	
-		}
-		
-	}
-		
+        /* Stockage du formulaire et du bean dans l'objet request */
+        request.setAttribute(ATTRIBUT_FORM, form);
+        request.setAttribute(ATTRIBUT_USER, user);
+        
+        this.getServletContext().getRequestDispatcher(VUE).forward(request, response);
+	}		
 
 }
