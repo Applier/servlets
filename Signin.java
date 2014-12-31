@@ -53,7 +53,7 @@ public class Signin extends HttpServlet {
         request.setAttribute(ATTRIBUT_FORM, form);
         request.setAttribute(ATTRIBUT_USER, user);
         
-        this.getServletContext().getRequestDispatcher( VUE ).forward( request, response );
+        this.getServletContext().getRequestDispatcher(VUE).forward( request, response );
 	}		
 
 }
