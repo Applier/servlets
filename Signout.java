@@ -24,7 +24,7 @@ public class Signout extends HttpServlet {
         /* Récupération et destruction de la session en cours */
         HttpSession session = request.getSession();
         session.invalidate();
-
+        
         /* Redirection vers la page de connexion */
         response.sendRedirect(URL_REDIRECTION);
     }
